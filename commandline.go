@@ -46,6 +46,11 @@ func (cmdline *CommandLine) KeyCompletion() {
 	}
 }
 
+// PrintDesc prints the description of all options.
+func (cmdline *CommandLine) PrintDesc() {
+	layoutMenu(cmdline.cmds, 100)
+}
+
 // SetPromt sets the prefix of user command input line.
 func (cmdline *CommandLine) SetPromt(b []byte) {
 	cmdline.promt = b

@@ -10,6 +10,7 @@ import (
 var (
 	ExitIcli    = errors.New("Exit the main icli loop.") // Function return this err to exit the mainloop
 	CmdNotFound = errors.New("Command not found.")       // Command not found.
+	PrintDesc   = errors.New("Print Description.")       // Print description.
 )
 
 const (
@@ -45,7 +46,7 @@ func Start(errorHandler func(error) error) {
 	os.Stdout = stdout.Fd()
 
 	termbox.SetInputMode(termbox.InputEsc)
-	redrawAll()
+	cl.PrintDesc()
 mainloop:
 	for {
 		switch ev := termbox.PollEvent(); ev.Type {
@@ -83,11 +84,15 @@ mainloop:
 					break mainloop
 				} else if err == CmdNotFound {
 					stdout.PutString("Command not found.\n", nilFunc)
+				} else if err == PrintDesc {
+					cl.PrintDesc()
 				} else {
 					// if the error is not in icli errors or nil, call the error handler.
 					err = errorHandler(err)
 					if err == ExitIcli {
 						break mainloop
+					} else if err == PrintDesc {
+						cl.PrintDesc()
 					}
 				}
 				cl.cmd = []byte{}
