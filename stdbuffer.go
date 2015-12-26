@@ -73,8 +73,9 @@ func (stdbuf *StdBuffer) PutCell(c []termbox.Cell, endWithNewline bool, refresh 
 	for {
 		currentLine := &stdbuf.buf[stdbuf.offset]
 		if len(cell)+len(*currentLine) > w {
-			*currentLine = append(*currentLine, cell[:w-len(*currentLine)]...)
-			cell = cell[w-len(*currentLine):]
+			length := w - len(*currentLine)
+			*currentLine = append(*currentLine, cell[:length]...)
+			cell = cell[length:]
 			stdbuf.offset = (stdbuf.offset + 1) % NumOfLines
 			stdbuf.buf[stdbuf.offset] = nil
 		} else {
